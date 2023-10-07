@@ -2,4 +2,4 @@
 # Do NOT upload to Git with credentials.py, add to .gitignore.
 
 def getHuggingFace():
-    return 'Bearer API_TOKEN_HERE'
+    return 'Bearer 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'

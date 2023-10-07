@@ -28,19 +28,22 @@ def getImage(modelURL, query, save):
 		image = Image.open(io.BytesIO(image_bytes))
 		currentTime = datetime.now().strftime("%H:%M:%S")	
 		imageName = currentTime + (query if len(query) < 12 else query[0:12]) # Image name created by time + (up-to) first 12 chars of query
-		imageSave = image.save(imageName+'.jpg')
+		imageSave = image.save('export/' + imageName+'.jpg')
 	else:
 		return image_bytes
 
 if args.compare:
 	subjects = args.model.split(',')
-	currentTime = datetime.now().strftime("%H:%M:%S")	
-	folderName = currentTime + (args.query if len(args.query) < 12 else args.query[0:12]) # Image name created by time + (up-to) first 12 chars of query
-	os.mkdir('export/' + folderName) # Makes folder for full output of each query within /export directory
-	for i in subjects:
-		temp = getImage(i, args.query, False)
-		image = Image.open(io.BytesIO(temp))
-		tempSave = image.save('export/' + folderName + '/' + i.replace('/', '--')+'.jpg') # Saves each image by model name in the folder
+	if len(subjects) > 1:
+		currentTime = datetime.now().strftime("%H:%M:%S")	
+		folderName = currentTime + (args.query if len(args.query) < 12 else args.query[0:12]) # Image name created by time + (up-to) first 12 chars of query
+		os.mkdir('export/' + folderName) # Makes folder for full output of each query within /export directory
+		for i in subjects:
+			temp = getImage(i, args.query, False)
+			image = Image.open(io.BytesIO(temp))
+			tempSave = image.save('export/' + folderName + '/' + i.replace('/', '--')+'.jpg') # Saves each image by model name in the folder
+	else:
+		print("Error, make sure to provide multiple model names, separated by comma (,)\nModel Arg Provided: args.model")
 else:
 	if args.query:
 		getImage(args.model if args.model else "stabilityai/stable-diffusion-2-1",args.query, True)
